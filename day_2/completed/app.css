@@ -1,0 +1,32 @@
+body {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: linear-gradient(
+      to right,
+      rgba(60, 179, 113, 0.5),
+      rgba(60, 179, 113, 0.9)
+    ),
+    url("https://i.pinimg.com/564x/e9/29/1c/e9291cc39e820cd4afc6e58618dfc9e0.jpg");
+}
+
+.app {
+  font-weight: bold;
+  font-size: 30px;
+}
+#value {
+  color: red;
+}
+
+.actions {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+}
+button {
+  font-size: 25px;
+
+  padding: 5px;
+  margin: 5px;
+}

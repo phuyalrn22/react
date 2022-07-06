@@ -1,34 +1,16 @@
-let products = [
-  {
-    createdAt: "2022-06-29T13:57:15.572Z",
-    name: "Mr. Ricky Pacocha",
-    avatar:
-      "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/278.jpg",
-    thumbnail: "http://loremflickr.com/640/480/fashion",
-    price: 84085,
-    oldPrice: 59525,
-    id: "1",
-    description:
-      " The Vans All-Weather MTE Collection features footwear and apparel designed to withstand the elements whilst still looking cool",
-  },
+//  data fetch
+//  wait
+//
+const apiUrl = "https://62bd8db5c5ad14c110c16cc2.mockapi.io/product";
 
-  {
-    createdAt: "2022-06-29T13:57:15.572Z",
-    name: "Mr Jhon william",
-    avatar:
-      "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/29.jpg",
-    thumbnail: "http://loremflickr.com/640/480/fashion",
-    price: 200,
-    oldPrice: 100,
-    id: "2",
-    description:
-      " The Vans All-Weather MTE Collection features footwear and apparel designed to withstand the elements whilst still looking cool",
-  },
-];
+var loadingComponent = `
+<div class="spinner-border" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>`;
 
 var component = (product) => `
-  <div class="col-12 col-sm-8 col-md-6 col-lg-4 m-4">
-          <div class="card">
+  <div class="col-12 col-sm-8 col-md-6 col-lg-4 ">
+          <div class="card mx-4">
             <img
               class="card-img"
               src=${product.thumbnail}
@@ -53,7 +35,20 @@ var component = (product) => `
         </div>
 `;
 
-const body = document.getElementById("body");
-for (let i = 0; i <= products.length; i++) {
-  body.innerHTML += component(products[i]);
-}
+const fetchResource = async () => {
+  const res = await fetch(apiUrl);
+  var product = await res.json();
+
+  return product;
+};
+const buildHtmlBody = async () => {
+  const body = document.getElementById("body");
+  body.innerHTML = loadingComponent;
+  const data = await fetchResource();
+  body.innerHTML = "";
+  for (let i = 0; i <= data.length; i++) {
+    body.innerHTML += component(data[i]);
+  }
+};
+
+buildHtmlBody();

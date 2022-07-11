@@ -1,27 +1,17 @@
-import React, { useEffect, useState } from "react";
-import Product from "./Product";
-import { getProduct } from "../services/product";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
-// products
-// error,
-// loading
+import Product from "../../component/ProductCard";
+import { getProduct } from "../../services/product";
+import { CartContext } from "../../context/CartContext";
 
 const Products = () => {
+  const { cart } = useContext(CartContext);
+
   const [product, setProduct] = useState({
     products: [],
     error: null,
     loading: true,
-    cartCount: localStorage.getItem("count")
-      ? localStorage.getItem("count")
-      : 0,
   });
-
-  const setCartCount = (cartCount) => {
-    setProduct({
-      ...product,
-      cartCount,
-    });
-  };
 
   const helper = async () => {
     try {
@@ -63,7 +53,7 @@ const Products = () => {
   }
   return (
     <>
-      <nav>cartCounter: {product.cartCount}</nav>
+      <nav>cartCounter: {cart}</nav>
       <div className="container">
         <div className="d-flex flex-wrap" id="body">
           {product.products.map((p, i) => {
@@ -72,8 +62,6 @@ const Products = () => {
                 bgc={i % 2 !== 0 && "bg-secondary bg-opacity-10"}
                 key={p.id}
                 product={p}
-                cartCount={product.cartCount}
-                setCartCount={setCartCount}
               />
             );
           })}

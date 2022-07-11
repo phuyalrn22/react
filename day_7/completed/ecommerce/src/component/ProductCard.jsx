@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
+import { Link } from "react-router-dom";
+import { CartContext } from "../context/CartContext";
 
-const Product = ({ product, cartCount, setCartCount, bgc }) => {
-  const addToCartHandler = () => {
-    localStorage.setItem("count", cartCount + 1);
-    setCartCount(cartCount + 1);
-  };
-  const { name, thumbnailImage, price, oldPrice, description } = product;
+const Product = ({ product, bgc }) => {
+  const { updateCart } = useContext(CartContext);
+
+  const { name, thumbnailImage, price, oldPrice, description, id } = product;
   return (
     <div className={`col-12 col-sm-8 col-md-6 col-lg-4 `}>
+      {/* <Link to={`/products/${id}`}> */}
       <div className={`card mx-4 ${bgc}`}>
         <img className="card-img" src={thumbnailImage} alt={name} />
 
@@ -21,7 +22,7 @@ const Product = ({ product, cartCount, setCartCount, bgc }) => {
               <h5 className="mt-4">${price}</h5>
             </div>
             <button
-              onClick={addToCartHandler}
+              onClick={updateCart}
               href="#"
               className="btn btn-danger mt-3"
             >
@@ -31,6 +32,7 @@ const Product = ({ product, cartCount, setCartCount, bgc }) => {
           </div>
         </div>
       </div>
+      {/* </Link> */}
     </div>
   );
 };

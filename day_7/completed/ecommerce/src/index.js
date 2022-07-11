@@ -1,13 +1,32 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Products from "./component/Products";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import CartProvider from "./context/CartContext";
+import Products from "./pages/Home/products";
+import ProductDetailsPage from "./pages/productDetails";
+import Description from "./pages/productDetails/components/Description";
+import Review from "./pages/productDetails/components/Review";
 
 import reportWebVitals from "./reportWebVitals";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <Products />
+    <CartProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Products />} />
+          <Route path="/products/:id" element={<ProductDetailsPage />}>
+            <Route path="" element={<Description />} />
+            <Route path="description" element={<Description />} />
+
+            <Route path="review" element={<Review />} />
+          </Route>
+
+          <Route path="*" element={<div>404 No page found</div>} />
+        </Routes>
+      </BrowserRouter>
+    </CartProvider>
   </React.StrictMode>
 );
 

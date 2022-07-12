@@ -3,9 +3,11 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import CartProvider from "./context/CartContext";
 import Products from "./pages/Home/products";
+import LoginForm from "./pages/Login";
 import ProductDetailsPage from "./pages/productDetails";
 import Description from "./pages/productDetails/components/Description";
 import Review from "./pages/productDetails/components/Review";
+import SignUpForm from "./pages/Signup";
 
 import reportWebVitals from "./reportWebVitals";
 
@@ -16,10 +18,12 @@ root.render(
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Products />} />
+          <Route path="/signup" element={<SignUpForm />} />
+          <Route path="/login" element={<LoginForm />} />
+
           <Route path="/products/:id" element={<ProductDetailsPage />}>
             <Route path="" element={<Description />} />
             <Route path="description" element={<Description />} />
-
             <Route path="review" element={<Review />} />
           </Route>
 

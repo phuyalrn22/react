@@ -15,12 +15,31 @@ const LoginForm = () => {
     email: {
       value: "",
       name: "email",
+      label: "Email Address",
+      type: "text",
       isValid: false,
+
+      validationSchema: validateEmail,
+      error: "",
+    },
+    ageGroup: {
+      value: "",
+      name: "ageGroup",
+      label: "Age Group",
+      type: "select",
+      isValid: false,
+      options: [
+        { view: "0-10", value: "minor@" },
+        { view: "10-100", value: "major@" },
+      ],
+
       validationSchema: validateEmail,
       error: "",
     },
     password: {
       value: "",
+      label: "Password",
+      type: "password",
       name: "password",
       isValid: false,
       validationSchema: validatePassword,
@@ -49,53 +68,51 @@ const LoginForm = () => {
       }
     });
     if (isValid) {
+      console.log(formValues);
       console.log("form submitted");
     } else {
       console.log("Please verify form once");
     }
   };
-  console.log(formValues.email.error);
   return (
     <div>
       <div className="container m-auto">
         <div className="card p-4" style={{ maxWidth: "800px", margin: "auto" }}>
           <form onSubmit={onFormSubmit}>
-            <div className="mb-3 row">
-              <label htmlFor="staticEmail" className="col-sm-2 col-form-label">
-                Email
-              </label>
-              <div className="col-sm-10">
-                <input
-                  name={formValues.email.name}
-                  value={formValues.email.value}
-                  onChange={(e) =>
-                    onChangeHandler(formValues.email.name, e.target.value)
-                  }
-                  type="text"
-                  className="form-control-plaintext"
-                />
-              </div>
-              <div className="error ">{formValues.email.error}</div>
-            </div>
-            <div className="mb-3 row">
-              <label
-                htmlFor="inputPassword"
-                className="col-sm-2 col-form-label"
-              >
-                Password
-              </label>
-              <div className="col-sm-10">
-                <input
-                  name={formValues.password.name}
-                  value={formValues.password.value}
-                  onChange={(e) =>
-                    onChangeHandler(formValues.password.name, e.target.value)
-                  }
-                  type="password"
-                  className="form-control"
-                />
-              </div>
-            </div>
+            {Object.values(formValues).map((formValue) => {
+              switch (formValue.type) {
+                case "select":
+                  return (
+                    <InputSelect
+                      config={formValue}
+                      onChangeHandler={onChangeHandler}
+                    />
+                  );
+                default:
+                  return (
+                    <div className="mb-3 row">
+                      <label
+                        htmlFor="staticEmail"
+                        className="col-sm-2 col-form-label"
+                      >
+                        {formValue.label}
+                      </label>
+                      <div className="col-sm-10">
+                        <input
+                          name={formValue.name}
+                          value={formValue.value}
+                          onChange={(e) =>
+                            onChangeHandler(formValue.name, e.target.value)
+                          }
+                          type="text"
+                          className="form-control-plaintext"
+                        />
+                      </div>
+                      <div className="error ">{formValue.error}</div>
+                    </div>
+                  );
+              }
+            })}
             <button type="submit" className="btn btn-primary">
               Signup
             </button>
@@ -107,3 +124,17 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
+
+const InputSelect = ({ config, onChangeHandler }) => {
+  return (
+    <select
+      name={config.name}
+      value={config.value}
+      onChange={(e) => onChangeHandler(config.name, e.target.value)}
+    >
+      {config.options.map((option) => (
+        <option value={option.value}>{option.view}</option>
+      ))}
+    </select>
+  );
+};

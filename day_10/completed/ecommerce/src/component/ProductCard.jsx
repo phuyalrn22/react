@@ -4,7 +4,7 @@ import { ToastContext } from "../context/ToastContext";
 
 const Product = ({ product, bgc }) => {
   const { updateCart } = useContext(CartContext);
-  const { addToast } = useContext(ToastContext);
+  const addToast = useContext(ToastContext);
 
   const { name, thumbnailImage, price, oldPrice, description, id } = product;
   return (

@@ -1,30 +1,32 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export const ToastContext = createContext();
 
+// [{
+//   message: "",
+//   type: "",
+//   id:""
+// }]
+// filter
 const ToastProvider = ({ children }) => {
-  const [showToast, setShowToast] = useState([]);
-  useEffect(() => {
-    if (showToast.length > 0) {
-      setTimeout(() => {
-        const newToast = [...showToast];
-        newToast.pop();
-        setShowToast(newToast);
-      }, 2000);
-    }
-    // return clearTimeout(timeOut);
-  }, [showToast]);
+  const [toastList, setToastList] = useState([]);
+  const removeToast = (id) => {
+    setToastList((currentToasts) =>
+      currentToasts.filter((toast) => toast.id !== id)
+    );
+  };
 
   const addToast = (message) => {
-    setShowToast([message, ...showToast]);
+    let toastItem = { ...message };
+    toastItem.id = uuidv4();
+
+    let newToastList = [toastItem, ...toastList];
+    setToastList(newToastList);
   };
 
   return (
-    <ToastContext.Provider
-      value={{
-        addToast,
-      }}
-    >
+    <ToastContext.Provider value={addToast}>
       {children}
       <div
         className="position-fixed "
@@ -34,31 +36,28 @@ const ToastProvider = ({ children }) => {
           zIndex: "100",
         }}
       >
-        {showToast.map((x, i) => {
-          switch (x.type) {
-            case "error":
-              return (
-                <div key={i} className=" text-bg-danger p-3">
-                  {x.message}
-                </div>
-              );
-            case "warning":
-              return (
-                <div key={i} className=" text-bg-warning p-3">
-                  {x.message}
-                </div>
-              );
-            default:
-              return (
-                <div key={i} className=" text-bg-success p-3">
-                  {x.message}
-                </div>
-              );
-          }
-        })}
+        {toastList.map((x) => (
+          <ToastComponent key={x.id} toast={x} removeToast={removeToast} />
+        ))}
       </div>
     </ToastContext.Provider>
   );
 };
 
 export default ToastProvider;
+
+export const ToastComponent = ({ toast, removeToast }) => {
+  useEffect(() => {
+    var timeOut = setTimeout(() => {
+      removeToast(toast.id);
+    }, 2000);
+  }, [removeToast]);
+  switch (toast.type) {
+    case "error":
+      return <div className=" text-bg-danger p-3">{toast.message}</div>;
+    case "warning":
+      return <div className=" text-bg-warning p-3">{toast.message}</div>;
+    default:
+      return <div className=" text-bg-success p-3">{toast.message}</div>;
+  }
+};
